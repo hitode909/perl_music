@@ -12,11 +12,8 @@ while ( defined( $data = $read->read_raw_samples( 1 ) ) ) {
     push @data, $data;
 }
 
-my $max = 1<<15;
 for my $data (map { unpack('s', $_) } @data) {
     $data *= 2;
-    $data = 0 if $data > $max;
-    $data = 0 if $data < -$max;
     $write->write_raw( pack('s', $data) );
 }
 
