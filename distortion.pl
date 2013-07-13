@@ -12,10 +12,11 @@ while ( defined( $data = $read->read_raw_samples( 1 ) ) ) {
     push @data, $data;
 }
 
-my $threshold = 1<<16 * 0.8;
+my $max = 1<<15;
 for my $data (map { unpack('s', $_) } @data) {
-    $data = $threshold if  $data > ($threshold);
-    $data = -$threshold if  $data < -($threshold);
+    $data *= 2;
+    $data = 0 if $data > $max;
+    $data = 0 if $data < -$max;
     $write->write_raw( pack('s', $data) );
 }
 
